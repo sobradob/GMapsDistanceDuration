@@ -1,14 +1,15 @@
 #distance calucations
 #### This script uses RCurl and RJSONIO to download data from Google's API
 
-library(RCurl)
-library(RJSONIO)
+
 
 #define api key as: api<-"YOURAPI"
 #the function assumes address input in following dataframe:
 #lat1,lng1,lat2,lng2
 
-DistDur <- function(address,time = as.integer(Sys.time()),mode, return.call = "json", sensor = "false") {
+DistDur <- function(address,mode,time="",return.call = "json", sensor = "false") {
+  library(RCurl)
+  library(RJSONIO)
   address1<-paste(address[,1],address[,2], sep=" ")
   address2<-paste(address[,3],address[,4], sep=" ")
   root <- "https://maps.googleapis.com/maps/api/directions/"
@@ -16,6 +17,7 @@ DistDur <- function(address,time = as.integer(Sys.time()),mode, return.call = "j
   for (a in 1:length(u)){
     url<-URLencode(u[a])
     doc <- getURL(url)
+    doc<-gsub("\\\\", "\\", doc)
     x <- fromJSON(doc,simplify = FALSE)
     dist<-0
     dura<-0
